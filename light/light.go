@@ -64,47 +64,29 @@ func NewLight(cd, od time.Duration) *Light {
 
 // 实现开灯逻辑
 func (l *Light) LightOn() {
-	if l.status != On {
-		if !l.offDelaying {
-			l.status = On
-		}
-		l.nextOn = nil
-		l.onDelaying = false
-	}
+	l.status = On
+	l.nextOn = nil
+	l.onDelaying = false
 }
 
 // 实现关灯逻辑
 func (l *Light) LightOff() {
-	if l.status != Off {
-		if !l.onDelaying {
-			l.status = Off
-		}
-		l.nextOff = nil
-		l.offDelaying = false
-	}
+	l.status = Off
+	l.nextOff = nil
+	l.offDelaying = false
 }
 
 // 延时操作
 func (l *Light) LightDelay(opt LightStatus) {
 	switch opt {
 	case On:
-		if l.status == On {
-			l.offDelaying = false
-		} else {
-			if !l.onDelaying {
-				l.setNextLightOnTime()
-				l.onDelaying = true
-			}
-		}
+		l.setNextLightOnTime(&l.comeDelay)
+		l.onDelaying = true
+		l.offDelaying = false
 	case Off:
-		if l.status == Off {
-			l.onDelaying = false
-		} else {
-			if !l.offDelaying {
-				l.setNextLightOffTime()
-				l.offDelaying = true
-			}
-		}
+		l.setNextLightOffTime(&l.outDelay)
+		l.offDelaying = true
+		l.onDelaying = false
 	}
 }
 
@@ -114,15 +96,23 @@ func (l *Light) GetLightStatus() LightStatus {
 }
 
 // 设置下次开灯时间
-func (l *Light) setNextLightOnTime() {
-	next := time.Now().Add(l.comeDelay)
-	l.nextOn = &next
+func (l *Light) setNextLightOnTime(ti *time.Duration) {
+	if ti == nil {
+		l.nextOn = nil
+	} else {
+		next := time.Now().Add(*ti)
+		l.nextOn = &next
+	}
 }
 
 // 设置下次关灯时间
-func (l *Light) setNextLightOffTime() {
-	next := time.Now().Add(l.outDelay)
-	l.nextOff = &next
+func (l *Light) setNextLightOffTime(ti *time.Duration) {
+	if ti == nil {
+		l.nextOff = nil
+	} else {
+		next := time.Now().Add(*ti)
+		l.nextOff = &next
+	}
 }
 
 // 同步开灯操作
