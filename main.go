@@ -67,11 +67,8 @@ func main() {
 				break
 			}
 		}
-
-		fmt.Println("in put: ", n)
-		fmt.Println("counter: ", room.GetCounter())
-		fmt.Println("status: ", room.GetLightStatus())
-		fmt.Println()
+		//fmt.Printf("Input: %v, counter: %v, status: %v \n", n, room.GetCounter(), room.GetLightStatus())
 		time.Sleep(1 * time.Second)
+		fmt.Println(room.GetLightStatus())
 	}
 }

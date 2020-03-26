@@ -9,7 +9,7 @@ import (
 	"github.com/roggen-yang/console/light"
 )
 
-// 上下文封装类
+// 房间抽象类
 type Room struct {
 	move    peoples.IMover
 	counter peoples.ICounter
